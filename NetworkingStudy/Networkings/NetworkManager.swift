@@ -8,35 +8,6 @@
 import Foundation
 import Combine
 
-enum NetworkMangerError: Error {
-    case invalidUrl
-    case unspecified(Error)
-    case noUsers
-    case unexpected
-    case noData
-    case dataDecodeFailure
-    case invalidServerResponse
-    
-    var errorMsg: String {
-        switch self {
-        case .invalidUrl:
-            return "Invalid Url."
-        case .unspecified(let error):
-            return error.localizedDescription
-        case .noUsers:
-            return "No Users."
-        case .unexpected:
-            return "Unexpected Error Occured."
-        case .noData:
-            return "No data received."
-        case .dataDecodeFailure:
-            return "Cannot decode data."
-        case .invalidServerResponse:
-            return "Invalid Server Response."
-        }
-    }
-}
-
 class NetworkManager {
     /// URLSession dataTaskPublisher api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
@@ -88,7 +59,7 @@ class NetworkManager {
     
     /// wrap async/await api call to return a Result Publisher.
     static func asyncRequestToResultPublisher<T: Codable>(endPoint: JSONPlaceholderEndPoint) async -> AnyPublisher<T, NetworkMangerError> {
-        print("asyncRequestToResultPublisher Called.")
+        print("asyncRequestToResultPublisher called.")
         do {
             let t: T = try await request(endPoint: endPoint)
             return Result<T, NetworkMangerError>.success(t).publisher.eraseToAnyPublisher()
@@ -136,6 +107,22 @@ class NetworkManager {
         }
         
         dataTask.resume()
+    }
+    
+    /// Wrap traditional closure api call with Future Publisher.
+    static func requestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
+        print("requestForFuture called.")
+        return Future<T, NetworkMangerError> { promise in
+            request(endPoint: endPoint) { (result: Result<T, NetworkMangerError>) in
+                switch result {
+                case .success(let success):
+                    promise(.success(success))
+                case .failure(let failure):
+                    promise(.failure(failure))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
     
     static func getComponents(endPoint: JSONPlaceholderEndPoint) -> URLComponents {

@@ -16,6 +16,7 @@
 		BEE399D7281BDFC400E76C54 /* UsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399D6281BDFC400E76C54 /* UsersView.swift */; };
 		BEE399D9281BE06B00E76C54 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399D8281BE06B00E76C54 /* PostsView.swift */; };
 		BEE399DB281BE2D300E76C54 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399DA281BE2D300E76C54 /* LoadingView.swift */; };
+		BEE399DD281C054D00E76C54 /* NetworkMangerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		BEE399D6281BDFC400E76C54 /* UsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersView.swift; sourceTree = "<group>"; };
 		BEE399D8281BE06B00E76C54 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		BEE399DA281BE2D300E76C54 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMangerError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 			children = (
 				BEE399D1281BDE7400E76C54 /* EndPoint.swift */,
 				BEE399D3281BDF4700E76C54 /* NetworkManager.swift */,
+				BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */,
 			);
 			path = Networkings;
 			sourceTree = "<group>";
@@ -177,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEE399CE281BDE0100E76C54 /* Models.swift in Sources */,
+				BEE399DD281C054D00E76C54 /* NetworkMangerError.swift in Sources */,
 				BEE399D4281BDF4700E76C54 /* NetworkManager.swift in Sources */,
 				BEE399D9281BE06B00E76C54 /* PostsView.swift in Sources */,
 				BEE399D2281BDE7400E76C54 /* EndPoint.swift in Sources */,

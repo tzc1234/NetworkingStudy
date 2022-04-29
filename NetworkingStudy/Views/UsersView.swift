@@ -50,6 +50,7 @@ struct UsersView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear {
+            isLoading = true
 //            NetworkManager.request(endPoint: .getUsers) { (result: Result<[User], NetworkMangerError>) in
 //                switch result {
 //                case .success(let users):
@@ -59,21 +60,21 @@ struct UsersView: View {
 //                }
 //            }
             
-//            isLoading = true
 //            NetworkManager.request(endPoint: .getUsers)
-//                .receive(on: DispatchQueue.main)
-//                .sink { completion in
-//                    isLoading = false
-//                    switch completion {
-//                    case .finished:
-//                        break
-//                    case .failure(let error):
-//                        print(error.errorMsg)
-//                    }
-//                } receiveValue: { (users: [User]) in
-//                    self.users = users
-//                }
-//                .store(in: &subscriptions)
+            NetworkManager.requestForFuture(endPoint: .getUsers)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    isLoading = false
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print(error.errorMsg)
+                    }
+                } receiveValue: { (users: [User]) in
+                    self.users = users
+                }
+                .store(in: &subscriptions)
         }
         .task {
 //            do {
@@ -84,21 +85,21 @@ struct UsersView: View {
 //                print(err?.errorMsg ?? error.localizedDescription)
 //            }
             
-            isLoading = true
-            await NetworkManager.asyncRequestToResultPublisher(endPoint: .getUsers)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    isLoading = false
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print(error.errorMsg)
-                    }
-                }, receiveValue: { (users: [User]) in
-                    self.users = users
-                })
-                .store(in: &subscriptions)
+//            isLoading = true
+//            await NetworkManager.asyncRequestToResultPublisher(endPoint: .getUsers)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { completion in
+//                    isLoading = false
+//                    switch completion {
+//                    case .finished:
+//                        break
+//                    case .failure(let error):
+//                        print(error.errorMsg)
+//                    }
+//                }, receiveValue: { (users: [User]) in
+//                    self.users = users
+//                })
+//                .store(in: &subscriptions)
         }
     }
 }

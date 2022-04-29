@@ -1,2 +1,2 @@
 # NetworkingStudy
-Study swift networking
+Study networking with Swift Combine Framework.
