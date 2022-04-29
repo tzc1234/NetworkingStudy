@@ -59,23 +59,23 @@ struct UsersView: View {
 //                }
 //            }
             
-            isLoading = true
-            NetworkManager.request(endPoint: .getUsers)
-                .receive(on: DispatchQueue.main)
-                .sink { competion in
-                    isLoading = false
-                    switch competion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print(error.errorMsg)
-                    }
-                } receiveValue: { (users: [User]) in
-                    self.users = users
-                }
-                .store(in: &subscriptions)
+//            isLoading = true
+//            NetworkManager.request(endPoint: .getUsers)
+//                .receive(on: DispatchQueue.main)
+//                .sink { completion in
+//                    isLoading = false
+//                    switch completion {
+//                    case .finished:
+//                        break
+//                    case .failure(let error):
+//                        print(error.errorMsg)
+//                    }
+//                } receiveValue: { (users: [User]) in
+//                    self.users = users
+//                }
+//                .store(in: &subscriptions)
         }
-//        .task {
+        .task {
 //            do {
 //                let users: [User] = try await NetworkManager.request(endPoint: .getUsers)
 //                self.users = users
@@ -83,7 +83,23 @@ struct UsersView: View {
 //                let err = error as? NetworkMangerError
 //                print(err?.errorMsg ?? error.localizedDescription)
 //            }
-//        }
+            
+            isLoading = true
+            await NetworkManager.asyncRequestToResultPublisher(endPoint: .getUsers)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    isLoading = false
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print(error.errorMsg)
+                    }
+                }, receiveValue: { (users: [User]) in
+                    self.users = users
+                })
+                .store(in: &subscriptions)
+        }
     }
 }
 

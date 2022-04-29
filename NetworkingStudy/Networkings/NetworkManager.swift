@@ -38,6 +38,7 @@ enum NetworkMangerError: Error {
 }
 
 class NetworkManager {
+    /// URLSession dataTaskPublisher api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
         guard let url = getComponents(endPoint: endPoint).url else {
             return Fail<T, NetworkMangerError>(error: .invalidUrl)
@@ -66,6 +67,7 @@ class NetworkManager {
         return publisher
     }
     
+    /// async/await api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint) async throws -> T {
         guard let url = getComponents(endPoint: endPoint).url else {
             throw NetworkMangerError.invalidUrl
@@ -84,6 +86,19 @@ class NetworkManager {
         return try JSONDecoder().decode(T.self, from: data)
     }
     
+    /// wrap async/await api call to return a Result Publisher.
+    static func asyncRequestToResultPublisher<T: Codable>(endPoint: JSONPlaceholderEndPoint) async -> AnyPublisher<T, NetworkMangerError> {
+        print("asyncRequestToResultPublisher Called.")
+        do {
+            let t: T = try await request(endPoint: endPoint)
+            return Result<T, NetworkMangerError>.success(t).publisher.eraseToAnyPublisher()
+        } catch {
+            let networkMangerError = (error as? NetworkMangerError) ?? .unspecified(error)
+            return Result<T, NetworkMangerError>.failure(networkMangerError).publisher.eraseToAnyPublisher()
+        }
+    }
+    
+    /// Traditional closure api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint, completion: @escaping (Result<T, NetworkMangerError>) -> Void) {
         guard let url = getComponents(endPoint: endPoint).url else {
             completion(.failure(.invalidUrl))
