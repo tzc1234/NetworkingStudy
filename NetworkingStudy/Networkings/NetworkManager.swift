@@ -57,7 +57,7 @@ class NetworkManager {
         return try JSONDecoder().decode(T.self, from: data)
     }
     
-    /// wrap async/await api call to return a Result Publisher.
+    /// Wrap async/await api call to return a Result Publisher.
     static func asyncRequestToResultPublisher<T: Codable>(endPoint: JSONPlaceholderEndPoint) async -> AnyPublisher<T, NetworkMangerError> {
         print("asyncRequestToResultPublisher called.")
         do {
@@ -67,6 +67,23 @@ class NetworkManager {
             let networkMangerError = (error as? NetworkMangerError) ?? .unspecified(error)
             return Result<T, NetworkMangerError>.failure(networkMangerError).publisher.eraseToAnyPublisher()
         }
+    }
+    
+    /// Wrap async/await api call to Future Publisher.
+    static func asyncRequestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
+        print("asyncRequestForFuture called.")
+        return Future<T, NetworkMangerError> { promise in
+            Task {
+                do {
+                    let t: T = try await request(endPoint: endPoint)
+                    promise(.success(t))
+                } catch {
+                    let networkMangerError = (error as? NetworkMangerError) ?? .unspecified(error)
+                    promise(.failure(networkMangerError))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
     
     /// Traditional closure api call.
@@ -109,7 +126,7 @@ class NetworkManager {
         dataTask.resume()
     }
     
-    /// Wrap traditional closure api call with Future Publisher.
+    /// Wrap traditional closure api call to Future Publisher.
     static func requestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
         print("requestForFuture called.")
         return Future<T, NetworkMangerError> { promise in

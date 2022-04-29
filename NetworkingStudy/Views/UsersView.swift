@@ -61,7 +61,8 @@ struct UsersView: View {
 //            }
             
 //            NetworkManager.request(endPoint: .getUsers)
-            NetworkManager.requestForFuture(endPoint: .getUsers)
+//            NetworkManager.requestForFuture(endPoint: .getUsers)
+            NetworkManager.asyncRequestForFuture(endPoint: .getUsers)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     isLoading = false
