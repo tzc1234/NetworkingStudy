@@ -1,2 +1,2 @@
 # NetworkingStudy
-Study networking with Swift Combine Framework.
+A record of study networking with Swift Combine Framework.

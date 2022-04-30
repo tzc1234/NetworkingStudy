@@ -10,9 +10,9 @@ import Combine
 
 class NetworkManager {
     /// URLSession dataTaskPublisher api call.
-    static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
+    static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint, type: T.Type) -> AnyPublisher<T, NetworkManagerError> {
         guard let url = getComponents(endPoint: endPoint).url else {
-            return Fail<T, NetworkMangerError>(error: .invalidUrl)
+            return Fail<T, NetworkManagerError>(error: .invalidUrl)
                 .eraseToAnyPublisher()
         }
         
@@ -21,16 +21,17 @@ class NetworkManager {
         
         let session = URLSession(configuration: .default)
         let publisher = session.dataTaskPublisher(for: urlRequest)
+            .print()
             .tryMap { data, response in
                 guard let httpResponse = response as? HTTPURLResponse,
                         httpResponse.statusCode == 200 else {
-                    throw NetworkMangerError.invalidServerResponse
+                    throw NetworkManagerError.invalidServerResponse
                 }
                 return data
             }
             .decode(type: T.self, decoder: JSONDecoder())
-            .catch { error -> Fail<T, NetworkMangerError> in
-                let error = (error as? NetworkMangerError) ?? .unspecified(error)
+            .catch { error -> Fail<T, NetworkManagerError> in
+                let error = (error as? NetworkManagerError) ?? .unspecified(error)
                 return Fail(error: error)
             }
             .eraseToAnyPublisher()
@@ -41,7 +42,7 @@ class NetworkManager {
     /// async/await api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint) async throws -> T {
         guard let url = getComponents(endPoint: endPoint).url else {
-            throw NetworkMangerError.invalidUrl
+            throw NetworkManagerError.invalidUrl
         }
         
         var urlRequest = URLRequest(url: url)
@@ -50,35 +51,37 @@ class NetworkManager {
         let session = URLSession(configuration: .default)
         let (data, response) = try await session.data(for: urlRequest)
         
+        print("api call here.")
+        
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkMangerError.invalidServerResponse
+            throw NetworkManagerError.invalidServerResponse
         }
         
         return try JSONDecoder().decode(T.self, from: data)
     }
     
     /// Wrap async/await api call to return a Result Publisher.
-    static func asyncRequestToResultPublisher<T: Codable>(endPoint: JSONPlaceholderEndPoint) async -> AnyPublisher<T, NetworkMangerError> {
+    static func asyncRequestToResultPublisher<T: Codable>(endPoint: JSONPlaceholderEndPoint) async -> AnyPublisher<T, NetworkManagerError> {
         print("asyncRequestToResultPublisher called.")
         do {
             let t: T = try await request(endPoint: endPoint)
-            return Result<T, NetworkMangerError>.success(t).publisher.eraseToAnyPublisher()
+            return Result<T, NetworkManagerError>.success(t).publisher.eraseToAnyPublisher()
         } catch {
-            let networkMangerError = (error as? NetworkMangerError) ?? .unspecified(error)
-            return Result<T, NetworkMangerError>.failure(networkMangerError).publisher.eraseToAnyPublisher()
+            let networkMangerError = (error as? NetworkManagerError) ?? .unspecified(error)
+            return Result<T, NetworkManagerError>.failure(networkMangerError).publisher.eraseToAnyPublisher()
         }
     }
     
     /// Wrap async/await api call to Future Publisher.
-    static func asyncRequestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
+    static func asyncRequestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkManagerError> {
         print("asyncRequestForFuture called.")
-        return Future<T, NetworkMangerError> { promise in
+        return Future<T, NetworkManagerError> { promise in
             Task {
                 do {
                     let t: T = try await request(endPoint: endPoint)
                     promise(.success(t))
                 } catch {
-                    let networkMangerError = (error as? NetworkMangerError) ?? .unspecified(error)
+                    let networkMangerError = (error as? NetworkManagerError) ?? .unspecified(error)
                     promise(.failure(networkMangerError))
                 }
             }
@@ -87,7 +90,7 @@ class NetworkManager {
     }
     
     /// Traditional closure api call.
-    static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint, completion: @escaping (Result<T, NetworkMangerError>) -> Void) {
+    static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint, completion: @escaping (Result<T, NetworkManagerError>) -> Void) {
         guard let url = getComponents(endPoint: endPoint).url else {
             completion(.failure(.invalidUrl))
             return
@@ -127,10 +130,10 @@ class NetworkManager {
     }
     
     /// Wrap traditional closure api call to Future Publisher.
-    static func requestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkMangerError> {
+    static func requestForFuture<T: Codable>(endPoint: JSONPlaceholderEndPoint) -> AnyPublisher<T, NetworkManagerError> {
         print("requestForFuture called.")
-        return Future<T, NetworkMangerError> { promise in
-            request(endPoint: endPoint) { (result: Result<T, NetworkMangerError>) in
+        return Future<T, NetworkManagerError> { promise in
+            request(endPoint: endPoint) { (result: Result<T, NetworkManagerError>) in
                 switch result {
                 case .success(let success):
                     promise(.success(success))
@@ -142,7 +145,7 @@ class NetworkManager {
         .eraseToAnyPublisher()
     }
     
-    static func getComponents(endPoint: JSONPlaceholderEndPoint) -> URLComponents {
+    static private func getComponents(endPoint: JSONPlaceholderEndPoint) -> URLComponents {
         var components = URLComponents()
         components.scheme = endPoint.scheme
         components.host = endPoint.baseURL

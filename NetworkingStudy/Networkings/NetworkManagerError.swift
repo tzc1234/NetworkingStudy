@@ -1,5 +1,5 @@
 //
-//  NetworkMangerError.swift
+//  NetworkManagerError.swift
 //  NetworkingStudy
 //
 //  Created by Tsz-Lung on 29/04/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkMangerError: Error {
+enum NetworkManagerError: Error {
     case invalidUrl
     case unspecified(Error)
     case noUsers

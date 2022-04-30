@@ -19,7 +19,7 @@ struct UsersView: View {
             ZStack {
                 List(users) { user in
                     NavigationLink {
-                        PostsView(userId: user.id)
+                        PostsView()
                     } label: {
                         VStack(spacing: 6.0) {
                             Text(user.name)
@@ -51,7 +51,8 @@ struct UsersView: View {
         .navigationViewStyle(.stack)
         .onAppear {
             isLoading = true
-//            NetworkManager.request(endPoint: .getUsers) { (result: Result<[User], NetworkMangerError>) in
+//            NetworkManager.request(endPoint: .getUsers) { (result: Result<[User], NetworkManagerError>) in
+//            isLoading = false
 //                switch result {
 //                case .success(let users):
 //                    self.users = users
@@ -60,9 +61,10 @@ struct UsersView: View {
 //                }
 //            }
             
-//            NetworkManager.request(endPoint: .getUsers)
-//            NetworkManager.requestForFuture(endPoint: .getUsers)
-            NetworkManager.asyncRequestForFuture(endPoint: .getUsers)
+//            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.request(endPoint: .getUsers)
+//            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.requestForFuture(endPoint: .getUsers)
+            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.asyncRequestForFuture(endPoint: .getUsers)
+            pub
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     isLoading = false
@@ -76,18 +78,42 @@ struct UsersView: View {
                     self.users = users
                 }
                 .store(in: &subscriptions)
+
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+//                print("After sleep.")
+//                isLoading = true
+//                pub
+//                    .receive(on: DispatchQueue.main)
+//                    .sink { completion in
+//                        isLoading = false
+//                        switch completion {
+//                        case .finished:
+//                            break
+//                        case .failure(let error):
+//                            print(error.errorMsg)
+//                        }
+//                    } receiveValue: { (users: [User]) in
+//                        self.users = users
+//                    }
+//                    .store(in: &subscriptions)
+//            }
+
         }
         .task {
 //            do {
 //                let users: [User] = try await NetworkManager.request(endPoint: .getUsers)
 //                self.users = users
 //            } catch {
-//                let err = error as? NetworkMangerError
+//                let err = error as? NetworkManagerError
 //                print(err?.errorMsg ?? error.localizedDescription)
 //            }
             
 //            isLoading = true
+//
+//            let pub: AnyPublisher<[User], NetworkManagerError> =
 //            await NetworkManager.asyncRequestToResultPublisher(endPoint: .getUsers)
+//
+//            pub
 //                .receive(on: DispatchQueue.main)
 //                .sink(receiveCompletion: { completion in
 //                    isLoading = false
@@ -101,6 +127,26 @@ struct UsersView: View {
 //                    self.users = users
 //                })
 //                .store(in: &subscriptions)
+//
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//                print("After sleep.")
+//                pub
+//                    .receive(on: DispatchQueue.main)
+//                    .sink(receiveCompletion: { completion in
+//                        isLoading = false
+//                        switch completion {
+//                        case .finished:
+//                            break
+//                        case .failure(let error):
+//                            print(error.errorMsg)
+//                        }
+//                    }, receiveValue: { (users: [User]) in
+//                        self.users = users
+//                    })
+//                    .store(in: &subscriptions)
+//            }
+            
+            
         }
     }
 }

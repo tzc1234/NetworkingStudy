@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE9F597A281D80640091EDF6 /* NetworkManager+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9F5979281D80640091EDF6 /* NetworkManager+Additions.swift */; };
 		BEE399C0281BDD0500E76C54 /* NetworkingStudyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399BF281BDD0500E76C54 /* NetworkingStudyApp.swift */; };
 		BEE399C4281BDD0B00E76C54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEE399C3281BDD0B00E76C54 /* Assets.xcassets */; };
 		BEE399C7281BDD0B00E76C54 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEE399C6281BDD0B00E76C54 /* Preview Assets.xcassets */; };
@@ -16,10 +17,11 @@
 		BEE399D7281BDFC400E76C54 /* UsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399D6281BDFC400E76C54 /* UsersView.swift */; };
 		BEE399D9281BE06B00E76C54 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399D8281BE06B00E76C54 /* PostsView.swift */; };
 		BEE399DB281BE2D300E76C54 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399DA281BE2D300E76C54 /* LoadingView.swift */; };
-		BEE399DD281C054D00E76C54 /* NetworkMangerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */; };
+		BEE399DD281C054D00E76C54 /* NetworkManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE399DC281C054D00E76C54 /* NetworkManagerError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE9F5979281D80640091EDF6 /* NetworkManager+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkManager+Additions.swift"; sourceTree = "<group>"; };
 		BEE399BC281BDD0500E76C54 /* NetworkingStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkingStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEE399BF281BDD0500E76C54 /* NetworkingStudyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingStudyApp.swift; sourceTree = "<group>"; };
 		BEE399C3281BDD0B00E76C54 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -30,7 +32,7 @@
 		BEE399D6281BDFC400E76C54 /* UsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersView.swift; sourceTree = "<group>"; };
 		BEE399D8281BE06B00E76C54 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		BEE399DA281BE2D300E76C54 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMangerError.swift; sourceTree = "<group>"; };
+		BEE399DC281C054D00E76C54 /* NetworkManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,8 +87,9 @@
 			isa = PBXGroup;
 			children = (
 				BEE399D1281BDE7400E76C54 /* EndPoint.swift */,
+				BEE399DC281C054D00E76C54 /* NetworkManagerError.swift */,
 				BEE399D3281BDF4700E76C54 /* NetworkManager.swift */,
-				BEE399DC281C054D00E76C54 /* NetworkMangerError.swift */,
+				BE9F5979281D80640091EDF6 /* NetworkManager+Additions.swift */,
 			);
 			path = Networkings;
 			sourceTree = "<group>";
@@ -180,13 +183,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEE399CE281BDE0100E76C54 /* Models.swift in Sources */,
-				BEE399DD281C054D00E76C54 /* NetworkMangerError.swift in Sources */,
+				BEE399DD281C054D00E76C54 /* NetworkManagerError.swift in Sources */,
 				BEE399D4281BDF4700E76C54 /* NetworkManager.swift in Sources */,
 				BEE399D9281BE06B00E76C54 /* PostsView.swift in Sources */,
 				BEE399D2281BDE7400E76C54 /* EndPoint.swift in Sources */,
 				BEE399C0281BDD0500E76C54 /* NetworkingStudyApp.swift in Sources */,
 				BEE399DB281BE2D300E76C54 /* LoadingView.swift in Sources */,
 				BEE399D7281BDFC400E76C54 /* UsersView.swift in Sources */,
+				BE9F597A281D80640091EDF6 /* NetworkManager+Additions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
