@@ -16,7 +16,7 @@ struct UsersView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
+            LoadingView(isLoading: isLoading) {
                 List(users) { user in
 //                    NavigationLink {
 //                        PostsView()
@@ -43,10 +43,6 @@ struct UsersView: View {
                 }
                 .listStyle(.grouped)
                 .navigationTitle("Users")
-                
-                if isLoading {
-                    LoadingView()
-                }
             }
         }
         .navigationViewStyle(.stack)

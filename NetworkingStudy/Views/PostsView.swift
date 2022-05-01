@@ -17,7 +17,7 @@ struct PostsView: View {
 //    let userId: Int
     
     var body: some View {
-        ZStack {
+        LoadingView(isLoading: isLoading) {
             List {
                 ForEach(posts) { post in
                     VStack(spacing: 6.0) {
@@ -41,15 +41,11 @@ struct PostsView: View {
             }
             .listStyle(.grouped)
             .navigationBarTitle("Posts")
-            
-            if isLoading {
-                LoadingView()
-            }
         }
         .onAppear {
             isLoading = true
-//            NetworkManager.getPostsByFirstUser()
-            NetworkManager.getPostsByErrorUser()
+            NetworkManager.getPostsByFirstUser()
+//            NetworkManager.getPostsByErrorUser()
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     isLoading = false

@@ -7,27 +7,43 @@
 
 import SwiftUI
 
-struct LoadingView: View {
+struct LoadingView<Content: View>: View {
+    
+    let isLoading: Bool
+    let content: Content
+    
+    init(isLoading: Bool, @ViewBuilder content: () -> Content) {
+        self.isLoading = isLoading
+        self.content = content()
+    }
+    
     var body: some View {
         ZStack {
-            Color.clear
-            
-            ProgressView()
-                .progressViewStyle(.circular)
-                .tint(.white)
-                .scaleEffect(2)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.black)
-                        .frame(width: 90, height: 90)
-                )
+            content
+            loadingLayer
         }
-        .ignoresSafeArea()
     }
 }
 
-struct LoadingView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoadingView()
+// MARK: components
+extension LoadingView {
+    @ViewBuilder
+    private var loadingLayer: some View {
+        if isLoading {
+            ZStack {
+                Color.clear
+                
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .tint(.white)
+                    .scaleEffect(2)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(.black)
+                            .frame(width: 90, height: 90)
+                    )
+            }
+            .ignoresSafeArea()
+        }
     }
 }
