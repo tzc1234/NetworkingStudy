@@ -48,8 +48,8 @@ struct PostsView: View {
         }
         .onAppear {
             isLoading = true
-            NetworkManager.getPostsByFirstUser()
-//            NetworkManager.getPostsByErrorUser()
+//            NetworkManager.getPostsByFirstUser()
+            NetworkManager.getPostsByErrorUser()
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     isLoading = false
