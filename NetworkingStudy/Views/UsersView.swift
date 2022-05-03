@@ -10,14 +10,12 @@ import Combine
 
 struct UsersView: View {
     
-    @State private var users: [User] = []
-    @State private var isLoading = false
-    @State private var subscriptions = Set<AnyCancellable>()
+    @StateObject private var vm = UsersViewModel()
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(users) { user in
+                ForEach(vm.users) { user in
                     VStack(spacing: 6.0) {
                         Text(user.name)
                             .font(.title3)
@@ -37,27 +35,18 @@ struct UsersView: View {
                     }
                 }
             }
+            .requestRetryView(isShown: vm.isShownRetryView, retryBtnOnTap: vm.retryLastRequest)
+            .loadingView(isLoading: vm.isLoading)
             .listStyle(.grouped)
             .navigationTitle("Users")
-            .loadingView(isLoading: isLoading)
+            .refreshable {
+                vm.getUsers(withLoading: false)
+            }
+            
         }
         .navigationViewStyle(.stack)
         .onAppear {
-            isLoading = true
-            NetworkManager.shared.delayAndRetryErrUsers(inSeconds: 3, retryTimes: 10)
-                .receive(on: DispatchQueue.main)
-                .sink { completion in
-                    isLoading = false
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print("ERROR: \(error.errorMsg)")
-                    }
-                } receiveValue: { (users: [User]) in
-                    self.users = users
-                }
-                .store(in: &subscriptions)
+            vm.getUsers()
         }
     }
 }

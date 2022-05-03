@@ -40,7 +40,7 @@ struct PostsView: View {
         }
         .listStyle(.grouped)
         .navigationBarTitle("Posts")
-        .loadingView(isLoading: isLoading)
+//        .loadingView(isLoading: isLoading)
         .onAppear {
             isLoading = true
             NetworkManager.shared.getPostsByFirstUser()

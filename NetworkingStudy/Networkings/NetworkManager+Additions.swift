@@ -9,6 +9,12 @@ import Foundation
 import Combine
 
 extension NetworkManager {
+    enum Requests {
+        case getPostsByFirstUser
+        case getUsers
+        case delayAndRetryErrUsers(delaySeconds: Double, retryTimes: Int, retryCount: Int)
+    }
+    
     func getPostsByFirstUser() -> AnyPublisher<[Post], NetworkManagerError> {
         let publisher = Self.request(endPoint: .getUsers, type: [User].self)
             .flatMap { users -> AnyPublisher<[Post], NetworkManagerError> in

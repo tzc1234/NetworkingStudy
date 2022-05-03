@@ -15,6 +15,7 @@ enum NetworkManagerError: Error {
     case noData
     case dataDecodeFailure(DecodingError)
     case invalidServerResponse
+    case networkUnavailable(URLError)
     
     var errorMsg: String {
         switch self {
@@ -32,6 +33,8 @@ enum NetworkManagerError: Error {
             return "\(error)"
         case .invalidServerResponse:
             return "Invalid Server Response."
+        case .networkUnavailable(let urlError):
+            return urlError.localizedDescription
         }
     }
 }

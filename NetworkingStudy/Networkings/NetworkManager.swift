@@ -34,7 +34,9 @@ class NetworkManager {
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .catch { error -> Fail<T, NetworkManagerError> in
-                if let decodingError = error as? DecodingError {
+                if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
+                    return Fail(error: .networkUnavailable(urlError))
+                } else if let decodingError = error as? DecodingError {
                     return Fail(error: .dataDecodeFailure(decodingError))
                 } else {
                     let error = (error as? NetworkManagerError) ?? .unspecified(error)
