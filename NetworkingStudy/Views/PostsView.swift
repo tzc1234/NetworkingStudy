@@ -17,34 +17,33 @@ struct PostsView: View {
 //    let userId: Int
     
     var body: some View {
-        LoadingView(isLoading: isLoading) {
-            List {
-                ForEach(posts) { post in
-                    VStack(spacing: 6.0) {
-                        Text(post.title)
-                            .font(.title3)
-                            .bold()
-                            .foregroundColor(.blue)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Text("UserId: \(post.userId)")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.orange)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Text(post.body)
-                            .font(.body)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+        List {
+            ForEach(posts) { post in
+                VStack(spacing: 6.0) {
+                    Text(post.title)
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Text("UserId: \(post.userId)")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.orange)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Text(post.body)
+                        .font(.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-            .listStyle(.grouped)
-            .navigationBarTitle("Posts")
         }
+        .listStyle(.grouped)
+        .navigationBarTitle("Posts")
+        .loadingView(isLoading: isLoading)
         .onAppear {
             isLoading = true
-            NetworkManager.getPostsByFirstUser()
+            NetworkManager.shared.getPostsByFirstUser()
 //            NetworkManager.getPostsByErrorUser()
                 .receive(on: DispatchQueue.main)
                 .sink { completion in

@@ -1,32 +1,22 @@
 //
-//  LoadingView.swift
+//  LoadingViewModifier.swift
 //  NetworkingStudy
 //
-//  Created by Tsz-Lung on 29/04/2022.
+//  Created by Tsz-Lung on 03/05/2022.
 //
 
 import SwiftUI
 
-struct LoadingView<Content: View>: View {
-    
+struct LoadingViewModifier: ViewModifier {
     let isLoading: Bool
-    let content: Content
     
-    init(isLoading: Bool, @ViewBuilder content: () -> Content) {
-        self.isLoading = isLoading
-        self.content = content()
-    }
-    
-    var body: some View {
+    func body(content: Content) -> some View {
         ZStack {
             content
             loadingLayer
         }
     }
-}
-
-// MARK: components
-extension LoadingView {
+    
     @ViewBuilder
     private var loadingLayer: some View {
         if isLoading {
@@ -45,5 +35,11 @@ extension LoadingView {
             }
             .ignoresSafeArea()
         }
+    }
+}
+
+extension View {
+    func loadingView(isLoading: Bool) -> some View {
+        modifier(LoadingViewModifier(isLoading: isLoading))
     }
 }

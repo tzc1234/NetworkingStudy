@@ -9,6 +9,9 @@ import Foundation
 import Combine
 
 class NetworkManager {
+    static let shared = NetworkManager()
+    private init() {}
+    
     /// URLSession dataTaskPublisher api call.
     static func request<T: Codable>(endPoint: JSONPlaceholderEndPoint, type: T.Type) -> AnyPublisher<T, NetworkManagerError> {
         guard let url = getComponents(endPoint: endPoint).url else {
@@ -31,8 +34,12 @@ class NetworkManager {
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .catch { error -> Fail<T, NetworkManagerError> in
-                let error = (error as? NetworkManagerError) ?? .unspecified(error)
-                return Fail(error: error)
+                if let decodingError = error as? DecodingError {
+                    return Fail(error: .dataDecodeFailure(decodingError))
+                } else {
+                    let error = (error as? NetworkManagerError) ?? .unspecified(error)
+                    return Fail(error: error)
+                }
             }
             .eraseToAnyPublisher()
         
@@ -121,7 +128,12 @@ class NetworkManager {
                     let responseObject = try JSONDecoder().decode(T.self, from: data)
                     completion(.success(responseObject))
                 } catch {
-                    completion(.failure(.dataDecodeFailure))
+                    if let decodingError = error as? DecodingError {
+                        completion(.failure(.dataDecodeFailure(decodingError)))
+                    } else {
+                        completion(.failure(.unspecified(error)))
+                    }
+                    
                 }
             }
         }

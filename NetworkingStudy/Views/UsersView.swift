@@ -16,13 +16,8 @@ struct UsersView: View {
     
     var body: some View {
         NavigationView {
-            LoadingView(isLoading: isLoading) {
-                List(users) { user in
-//                    NavigationLink {
-//                        PostsView()
-//                    } label: {
-//
-//                    }
+            List {
+                ForEach(users) { user in
                     VStack(spacing: 6.0) {
                         Text(user.name)
                             .font(.title3)
@@ -41,32 +36,15 @@ struct UsersView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                .listStyle(.grouped)
-                .navigationTitle("Users")
             }
+            .listStyle(.grouped)
+            .navigationTitle("Users")
+            .loadingView(isLoading: isLoading)
         }
         .navigationViewStyle(.stack)
         .onAppear {
             isLoading = true
-//            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.request(endPoint: .getUsers)
-//            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.requestForFuture(endPoint: .getUsers)
-//            let pub: AnyPublisher<[User], NetworkManagerError> = NetworkManager.asyncRequestForFuture(endPoint: .getUsers)
-//            pub
-//                .receive(on: DispatchQueue.main)
-//                .sink { completion in
-//                    isLoading = false
-//                    switch completion {
-//                    case .finished:
-//                        break
-//                    case .failure(let error):
-//                        print(error.errorMsg)
-//                    }
-//                } receiveValue: { (users: [User]) in
-//                    self.users = users
-//                }
-//                .store(in: &subscriptions)
-
-            NetworkManager.delayAndRetryErrUsers(inSeconds: 3, retryTimes: 10)
+            NetworkManager.shared.delayAndRetryErrUsers(inSeconds: 3, retryTimes: 10)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
                     isLoading = false

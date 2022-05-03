@@ -13,7 +13,7 @@ enum NetworkManagerError: Error {
     case noUsers
     case unexpected
     case noData
-    case dataDecodeFailure
+    case dataDecodeFailure(DecodingError)
     case invalidServerResponse
     
     var errorMsg: String {
@@ -28,8 +28,8 @@ enum NetworkManagerError: Error {
             return "Unexpected Error Occured."
         case .noData:
             return "No data received."
-        case .dataDecodeFailure:
-            return "Cannot decode data."
+        case .dataDecodeFailure(let error):
+            return "\(error)"
         case .invalidServerResponse:
             return "Invalid Server Response."
         }
