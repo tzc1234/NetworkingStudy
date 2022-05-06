@@ -27,7 +27,7 @@ class NetworkManager {
             .print()
             .tryMap { data, response in
                 guard let httpResponse = response as? HTTPURLResponse,
-                        httpResponse.statusCode == 200 else {
+                        httpResponse.isSuccess else {
                     throw NetworkManagerError.invalidServerResponse
                 }
                 return data
@@ -62,7 +62,7 @@ class NetworkManager {
         
         print("api call here.")
         
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+        guard let response = response as? HTTPURLResponse, response.isSuccess else {
             throw NetworkManagerError.invalidServerResponse
         }
         
@@ -115,7 +115,7 @@ class NetworkManager {
                 return
             }
             
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            guard let response = response as? HTTPURLResponse, response.isSuccess else {
                 completion(.failure(.invalidServerResponse))
                 return
             }
