@@ -15,7 +15,10 @@ final class UsersViewModel: ObservableObject {
     @Published private(set) var subscriptions = Set<AnyCancellable>()
     
     @Published private(set) var isShownRetryView = false
-    private var lastRequest: NetworkManager.Requests?
+    
+    // Should the failed request be store in ViewModel?
+    // Can I store it in NetworkManager?
+    private var lastFailedRequest: NetworkManager.Requests?
 }
 
 // MARK: functions
@@ -36,7 +39,7 @@ extension UsersViewModel {
                 case .failure(let error):
                     switch error {
                     case .networkUnavailable:
-                        self?.lastRequest = .getUsers
+                        self?.lastFailedRequest = .getUsers
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self?.isShownRetryView = true
                         }
@@ -50,9 +53,9 @@ extension UsersViewModel {
             .store(in: &subscriptions)
     }
     
-    func retryLastRequest() {
-        guard let lastRequest = lastRequest else { return }
-        self.lastRequest = nil
+    func retryLastFailedRequest() {
+        guard let lastRequest = lastFailedRequest else { return }
+        self.lastFailedRequest = nil
         
         switch lastRequest {
         case .getUsers:

@@ -35,7 +35,7 @@ struct UsersView: View {
                     }
                 }
             }
-            .requestRetryView(isShown: vm.isShownRetryView, retryBtnOnTap: vm.retryLastRequest)
+            .requestRetryView(isShown: vm.isShownRetryView, retryBtnOnTap: vm.retryLastFailedRequest)
             .loadingView(isLoading: vm.isLoading)
             .listStyle(.grouped)
             .navigationTitle("Users")
